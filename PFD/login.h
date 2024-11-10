@@ -10,19 +10,20 @@ int ENTRAR(char cpf[]){
 }
 
 void CADASTRO(char nome[], char cpf[]){
-    if(numeroDeClientes < 100 && strlen(nome) > 0){ //Verifica se o numero de clientes e menor que o tamanho maximo e se o nome não esta vazio
+    if(numeroDeClientes < 100 && strlen(nome) > 0){ //Verifica se o numero de clientes é menor que o tamanho máximo e se o nome não esta vazio
         strcpy(cliente[numeroDeClientes].nomeCliente, nome);
         strcpy(cliente[numeroDeClientes].cpfCliente, cpf);
-        numeroDeClientes++;//Incrementa o numero de clientes ja cadastrado
+        numeroDeClientes++; //Incrementa o numero de clientes ja cadastrado
         
         printf("\nCliente cadastrado com sucesso!\n");
-        //MENU_HOTEL(nome);//Envia o cliente para a pagina principal
+        MENU_HOTEL(nome);   //Envia o cliente para a pagina principal
 
     }else{
         if (numeroDeClientes >= 100) {
             printf("\nLimite de clientes atingido.\n");
         } else {
             printf("\nO nome do cliente nao pode ser vazio.\n");
+            CLIENTE();  //Redireciona novemente ao menu anterior
         }
     }
 
@@ -38,6 +39,10 @@ void CLIENTE(){
         scanf("%d", &opEntrada);
 
         switch (opEntrada){
+        case 0: //Encerra o sistema  
+            ACESSO_INICIAL();    
+            break;
+
         case 1:
             printf("\n\n-----------------------------------------------");
             printf("\n\tLOGIN DE CLIENTE\n");
@@ -56,7 +61,7 @@ void CLIENTE(){
             
             if(ENTRAR(CPF)){
                 printf("\nLogin bem sucedido!");
-                //MENU_HOTEL(Nome); //Envia o cliente para o menu principal
+                MENU_HOTEL(Nome); //Envia o cliente para o menu principal
             }else{
                 printf("\nLogin invalido!\n");
                 CLIENTE(); //Envia o cliente de volta ao menu anterior
