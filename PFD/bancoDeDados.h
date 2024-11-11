@@ -21,7 +21,7 @@ struct ADMIN{
 struct ADMIN adm = {"Rayssa", 12345};
 
 void ENTRADAS_BASE(){
-    //Entradas base de clientes
+    // Entradas base de clientes
 
     strcpy(cliente[0].nomeCliente, "Joao Silva");
     strcpy(cliente[0].cpfCliente, "12345678901");
@@ -32,7 +32,7 @@ void ENTRADAS_BASE(){
     strcpy(cliente[2].nomeCliente, "Eli Tomaz");
     strcpy(cliente[2].cpfCliente, "98765432787");
 
-    //Entradas base de reservas
+    // Entradas base de reservas
 
     reserva[0].numeroDoQuarto = 1;
     reserva[0].tipoDeCama = 2;
