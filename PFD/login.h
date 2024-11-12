@@ -1,4 +1,6 @@
 
+void CLIENTE();     // Tô chamando a função aqui pra parar de ficar mostrando alertas de função implicita.
+
 int ENTRAR(char cpf[]){
     int i;
     for(i = 0; i < numeroDeClientes; i++){
@@ -26,12 +28,10 @@ void CADASTRO(char nome[], char cpf[]){
             CLIENTE();  // Redireciona novemente ao menu anterior
         }
     }
-
 }
 
 void CLIENTE(){
     int opEntrada = 666;
-    printf("\n-----------------------------------------------\n");
     printf("\nSeja bem vindo querido Cliente!\n");    
     do{
         printf("\nPor favor, selecione sua opcao de entrada: ");
@@ -44,9 +44,9 @@ void CLIENTE(){
             break;
 
         case 1:
-            printf("\n\n-----------------------------------------------");
-            printf("\n\tLOGIN DE CLIENTE\n");
-            printf("\n\n-----------------------------------------------");
+            printf("\n-----------------------------------------------\n");
+            printf("\tLOGIN DE CLIENTE");
+            printf("\n-----------------------------------------------\n");
             
             char Nome[100], CPF[12];
 
@@ -64,15 +64,15 @@ void CLIENTE(){
                 printf("\nLogin bem sucedido!");
                 MENU_HOTEL(Nome); // Envia o cliente para o menu principal
             }else{
-                printf("\nLogin invalido!\n");
+                printf("\n\tLogin invalido!!\n");
                 CLIENTE(); // Envia o cliente de volta ao menu anterior
             }
             break;
 
         case 2:
-            printf("\n\n-----------------------------------------------");
-            printf("\n\tCADASTRO DE CLIENTE\n");
-            printf("\n\n-----------------------------------------------");
+            printf("\n-----------------------------------------------\n");
+            printf("\tCADASTRO DE CLIENTE");
+            printf("\n-----------------------------------------------\n");
             char nome[100], cpf[12];
 
             printf("\nDigite seu nome: ");
@@ -106,5 +106,6 @@ void ADMIN(){
         PAINEL_ADM(idEntrada); // Envia o adm para sua pagina principal
     }else{
         printf("\nEntrada invalida.\n");
+        ACESSO_INICIAL();
     }
 }

@@ -1,4 +1,6 @@
 
+int FAZER_RESERVA(char nome[], char entrada[], char saida[], int cama); // Tô chamando a função aqui pra parar de ficar mostrando alertas de função implicita.
+
 void MENU_HOTEL(char nome[]){
     int opc = 666;
     CABECALHO();
@@ -20,7 +22,7 @@ void MENU_HOTEL(char nome[]){
             printf("\n------------------------------------\n");
 
             char dtEntrada[11], dtSaida[11];
-            int tipoCama, numQuarto;
+            int tipoQuarto, numQuarto;
 
             printf("\nQual a data de entrada? (Formato: DD/MM/AA) ");
             getchar();
@@ -33,17 +35,25 @@ void MENU_HOTEL(char nome[]){
             dtSaida[strcspn(dtSaida, "\n")] = '\0';
 
             do{
-                printf("\nQual o tamanho de cama desejado? ");
+                printf("\nQual o tipo de quarto desejado? ");
                 PRECO_CAMAS();  // Tabela de valores dos quartos para cada tipo de cama
-                scanf("%d", &tipoCama);
-            } while (tipoCama != 1 && tipoCama != 2 && tipoCama != 3);
+                scanf("%d", &tipoQuarto);
+            } while (tipoQuarto != 1 && tipoQuarto != 2 && tipoQuarto != 3);
 
             printf("\nVerificando disponibilidade...\n");         
 
-            numQuarto = FAZER_RESERVA(nome, dtEntrada, dtSaida, tipoCama);
+            numQuarto = FAZER_RESERVA(nome, dtEntrada, dtSaida, tipoQuarto);
 
             if (numQuarto != -1) {
                 printf("\nReserva efetuada com sucesso!\nSeu quarto e o numero %d.", numQuarto);
+
+                printf("\nDeseja emitir o extrato de reserva do quarto? (s/n) ");
+                char emitirExtratoQ;
+                getchar();
+                scanf("%c", &emitirExtratoQ);
+                if(emitirExtratoQ == 's' || emitirExtratoQ == 'S'){
+                    //EXTRATO_RESERVA();     // Emite o extrato (arquivo) da reserva quarto
+                }
                 MENU_HOTEL(nome);
             } else {
                 printf("\nNao foi possivel fazer a reserva.\n");
@@ -53,10 +63,19 @@ void MENU_HOTEL(char nome[]){
         
         case 2:
             //CONSULTA_RESERVA(nome); // Consulta e edita a reserva
+            MENU_HOTEL(nome);
             break;
         
         case 3:
             //CANCELA_RESERVA(nome); // Cancela a reserva
+            printf("\nDeseja emitir o extrato de cancelamento da reserva do quarto? (s/n) ");
+            char emitirExtratoCancelamento;
+            getchar();
+            scanf("%c", &emitirExtratoCancelamento);
+            if(emitirExtratoCancelamento == 's' || emitirExtratoCancelamento == 'S'){
+                //EXTRATO_CANCELAMENTO();     // Emite o extrato (arquivo) do cancelamento da reserva quarto
+            }
+            MENU_HOTEL(nome);
             break;
         
         default:

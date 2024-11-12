@@ -2,15 +2,19 @@
 #include <string.h>
 #include <stdlib.h>
 
-// Declara o numero total de clientes cadastrados e reservas feitas, esses valores começam com base nos valores inseridos na base de dados
-int numeroDeClientes = 2, numeroDeReservas = 1; 
-char nomeHotel[200] = "XX";
+void ACESSO_INICIAL(void);  // Tô chamando a função aqui pra parar de ficar mostrando alertas de função implicita.
 
-#include "bancoDeDados.h" // Possui as structs com os dados do hotel
-#include "textos.h"     // Possui os textos base do sistema
-#include "admin.h"      // Possui a pagina do administrador
-#include "login.h"      // Possui as verificações de login e registro do sistema
-#include "menuHotel.h"  // Possui a pagina principal do hotel
+#include "baseDeDados.h" // Possui as structs com os dados do hotel
+#include "textos.h"      // Possui os textos base do sistema
+#include "admin.h"       // Possui a pagina do administrador
+#include "menuHotel.h"   // Possui a pagina principal do hotel
+#include "login.h"       // Possui as verificações de login e registro do sistema
+
+int main(){
+    ENTRADAS_BASE();
+    ACESSO_INICIAL(); 
+    return 0;
+}
 
 void ACESSO_INICIAL(){
     int opcaoAcesso;
@@ -33,10 +37,4 @@ void ACESSO_INICIAL(){
         printf("\nOpcao invalida, por favor tente novamente.\n\n");
         break;
     }
-}
-
-int main(){
-    ENTRADAS_BASE();
-    ACESSO_INICIAL(); 
-    return 0;
 }
