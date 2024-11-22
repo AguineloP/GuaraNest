@@ -1,0 +1,21 @@
+# depslib dependency file v1.0
+1732151832 source:c:\xampp\htdocs\projeto_ap2\main.c
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	"baseDeDados.h"
+	"textos.h"
+	"admin.h"
+	"menuHotel.h"
+	"login.h"
+
+1732274903 c:\xampp\htdocs\projeto_ap2\basededados.h
+
+1732274391 c:\xampp\htdocs\projeto_ap2\textos.h
+
+1732273853 c:\xampp\htdocs\projeto_ap2\admin.h
+
+1732274384 c:\xampp\htdocs\projeto_ap2\menuhotel.h
+
+1732274853 c:\xampp\htdocs\projeto_ap2\login.h
+

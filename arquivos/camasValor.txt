@@ -1,0 +1,3 @@
+Solteiro 50.00
+Casal 120.00
+QueenSize 500.00
