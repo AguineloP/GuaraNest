@@ -3,7 +3,7 @@
 
 
 
-int FAZER_RESERVA(char nome[], char entrada[], char saida[], int cama); // Tô chamando a função aqui pra parar de ficar mostrando alertas de função implicita.
+int FAZER_RESERVA(char nome[], char entrada[], char saida[], int cama, int andar); // Tô chamando a função aqui pra parar de ficar mostrando alertas de função implicita.
 
 void MENU_HOTEL(char nome[]){
     int opc = 666;
@@ -26,7 +26,7 @@ void MENU_HOTEL(char nome[]){
             printf("\n------------------------------------\n");
 
             char dtEntrada[11], dtSaida[11];
-            int tipoQuarto, numQuarto;
+            int tipoCama, numQuarto,andar;
 
             printf("\nQual a data de entrada? (Formato: DD/MM/AA) ");
             getchar();
@@ -41,24 +41,22 @@ void MENU_HOTEL(char nome[]){
             do{
                 printf("\nQual o tipo de quarto desejado? ");
                 PRECO_CAMAS();
-                scanf("%d", &tipoQuarto);
+                scanf("%d", &tipoCama);
 
-            } while (tipoQuarto != 1 && tipoQuarto != 2 && tipoQuarto != 3);
+            } while (tipoCama != 1 && tipoCama != 2 && tipoCama != 3);
+
+            do{
+                printf("\nQual andar desejado?");
+                scanf("%d", &andar);
+
+            } while (andar > 100 || andar < 1);
 
             printf("\nVerificando disponibilidade...\n");
 
-            numQuarto = FAZER_RESERVA(nome, dtEntrada, dtSaida, tipoQuarto);
+            numQuarto = FAZER_RESERVA(nome, dtEntrada, dtSaida, tipoCama, andar);
 
             if (numQuarto != -1) {
                 printf("\nReserva efetuada com sucesso!\nSeu quarto e o numero %d.", numQuarto);
-
-                printf("\nDeseja emitir o extrato de reserva do quarto? (s/n) ");
-                char emitirExtratoQ;
-                getchar();
-                scanf("%c", &emitirExtratoQ);
-                if(emitirExtratoQ == 's' || emitirExtratoQ == 'S'){
-                    //EXTRATO_RESERVA();     // Emite o extrato (arquivo) da reserva quarto
-                }
                 MENU_HOTEL(nome);
             } else {
                 printf("\nNao foi possivel fazer a reserva.\n");
@@ -90,47 +88,82 @@ void MENU_HOTEL(char nome[]){
     } while (opc != 0 && opc != 1 && opc != 2 && opc != 3);
 }
 
-// Função para converter a data (DD/MM/AA) em um inteiro AAAAMMDD
-int CONVERTER_DATA(const char *data) {
-    int dia, mes, ano;
-    sscanf(data, "%2d/%2d/%2d", &dia, &mes, &ano);  // Pega o dia, mes e ano e os atribui a variaveis separadas
-    return (ano + 2000) * 10000 + mes * 100 + dia;  // Faz a multiplicação pra que a data final fique um valor AAAAMMDD
+
+Data CONVERTER_DATA(const char *data){
+    Data dataConvertida;
+
+    sscanf(data, "%2d/%2d/%4d", &dataConvertida.dia, &dataConvertida.mes, &dataConvertida.ano);
+    return dataConvertida;
 }
 
-int FAZER_RESERVA(char nome[], char entrada[], char saida[], int cama){
-    // Converte as datas de string para numerico
-    int i, dataEntrada = CONVERTER_DATA(entrada), dataSaida = CONVERTER_DATA(saida);
+int FAZER_RESERVA(char nome[], char entrada[], char saida[], int cama, int andar){
 
-    for (i = 0; i < 200; i++) {
-        // Verifica se o numero do quarto e diferente de 0 e se o tipo de cama esta entre os disponiveis
-        if (reserva[i].numeroDoQuarto != 0 && reserva[i].tipoDeCama == cama) {
-            int dataReservadaEntrada = CONVERTER_DATA(reserva[i].dataDeEntrada);
-            int dataReservadaSaida = CONVERTER_DATA(reserva[i].dataDeSaida);
+    Data dataEntrada = CONVERTER_DATA(entrada);
+    Data dataSaida = CONVERTER_DATA(saida);
 
-            // Verifica se as datas se sobrepõem
-            if (!(dataSaida < dataReservadaEntrada || dataEntrada > dataReservadaSaida)) {
-                printf("\nQuarto indisponível para o período selecionado.\n");
-                return -1; // Indica que a reserva não foi possível
-            }
-        }
+    FILE *reservas;
+    reservas = fopen("arquivos/reservas.txt", "r");
+
+    if (reservas == NULL) {
+        printf("Erro ao abrir o arquivo.\n");
+        return -1;
     }
-    // Procura uma posição livre para a nova reserva
-    for (i = 0; i < 200; i++) {
-        if (reserva[i].numeroDoQuarto == 0) {
-            reserva[i].numeroDoQuarto = i + 1;  // Define o número do quarto
-            reserva[i].tipoDeCama = cama;       // Define a cama
 
-            strcpy(reserva[i].dataDeEntrada, entrada);  // Define o data de entra
-            strcpy(reserva[i].dataDeSaida, saida);      // Define o data de saida
+    char nomeVerifca[100],sobrenomeVerifica[100];
 
-            reserva[i].cliente = malloc(sizeof(struct CLIENTES));      // Descobre a quantidade de memoria necessária para os dados do cliente
-            strcpy(reserva[i].cliente->nomeCliente, nome);      // Atribui o nome do cliente a reserva
+    int dataE[3];
+    int dataS[3];
+    int VerficiaA;
+    int c;
 
-            numeroDeReservas++; // Incrementa o numero de reservas feitas
-            return reserva[i].numeroDoQuarto; // Retorna o numero do quarto reservado
+
+
+    while (fscanf(reservas, "%s %s %d %d %d %d %d %d %d %d",nomeVerifca, sobrenomeVerifica,
+    &dataE[0],&dataE[1],&dataE[2],
+    &dataS[0],&dataS[1],&dataS[2], &c, &VerficiaA) != EOF) {
+
+        char nomeCompleto[100];
+        sprintf(nomeCompleto, "%s %s", nomeVerifca, sobrenomeVerifica);
+
+        if(strcmp(nome, nomeCompleto) == 0) {
+            printf("Voce ja tem uma reserva cadastrada, nao e possivel ter mais de uma.");
+            return -1;
         }
+
     }
-    printf("Não há quartos disponíveis para o tipo selecionado.\n");
+
+    fclose(reservas);
+
+    if(dataEntrada.mes > 12 || dataSaida.mes > 12 ||
+       dataEntrada.dia > 31 || dataSaida.dia > 31 ||
+       dataEntrada.ano < 2024 || dataSaida.ano < 2024){
+        printf("\nColoque uma data valida para o cadastro da reserva.");
+        return -1;
+    }
+
+    reservas = fopen("arquivos/reservas.txt", "a");
+
+    if (reservas == NULL) {
+        printf("Erro ao abrir o arquivo.\n");
+        return -1;
+    }
+
+
+    char nomeV[50], sobrenomeV[50];
+    char *token = strtok(nome, " ");
+
+    strcpy(nomeV, token);
+
+    token = strtok(NULL, " ");
+    strcpy(sobrenomeV, token);
+
+    fprintf(reservas, "%s %s %d %d %d %d %d %d %d %d\n",nomeV, sobrenomeV,
+    dataEntrada.dia,dataEntrada.mes,dataEntrada.ano,
+    dataSaida.dia,dataSaida.mes,dataSaida.ano, cama, andar);
+
+
+    fclose(reservas);
+
     return 0;
 }
 

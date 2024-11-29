@@ -31,19 +31,7 @@ void VERIFICA_CLIENTES(){
 }
 
 void VERIFICA_RESERVAS(){
-    int i;
-    printf("\n\n\tRESERVAS FEITAS\n");
-    for(i = 0; i < numeroDeReservas; i++){  // Falta adicionar o valor da reserva!
-        printf("\nCliente: %s\tCPF: %s\nQuarto: %d\tValor:\nEntrada: %s\tSaida: %s\n", reserva[i].cliente->nomeCliente, reserva[i].cliente->cpfCliente, reserva[i].numeroDoQuarto, reserva[i].dataDeEntrada, reserva[i].dataDeSaida);
-    }
 
-    printf("\nDeseja emitir o extrato de reservas feitas? (s/n) ");
-    char emitirExtratoR;
-    getchar();
-    scanf("%c", &emitirExtratoR);
-    if(emitirExtratoR == 's' || emitirExtratoR == 'S'){
-        //EXTRATO_RESERVAS();     // Emite o extrato (arquivo) das reservas atuais
-    }
 }
 
 void PAINEL_ADM(int ID){

@@ -11,7 +11,6 @@ void ACESSO_INICIAL(void);  // Tô chamando a função aqui pra parar de ficar most
 #include "login.h"       // Possui as verificações de login e registro do sistema
 
 int main(){
-    ENTRADAS_BASE();
     ACESSO_INICIAL();
     return 0;
 }
