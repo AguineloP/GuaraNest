@@ -32,6 +32,32 @@ void VERIFICA_CLIENTES(){
 
 void VERIFICA_RESERVAS(){
 
+    FILE *reservas;
+
+    reservas = fopen("arquivos/reservas.txt","r");
+    if(reservas == NULL){
+        printf("ERRO INESPERADO POR PARTE DO SERVIDOR, POR FAVOR TENTE NOVAMENTE UMA OUTRA HORA");
+        return 1;
+    }
+    char nomeVerifca[100],sobrenomeVerifica[100];
+    int dataE[3];
+    int dataS[3];
+    char bed[20];
+    int quartoEscolhido;
+
+    rewind(reservas);
+    while(fscanf(reservas, "%s %s %d %d %d %d %d %d %s %d\n",nomeVerifca, sobrenomeVerifica,
+    &dataE[0],&dataE[1],&dataE[2],
+    &dataS[0],&dataS[1],&dataS[2], bed, &quartoEscolhido) != EOF){
+
+    printf("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+    printf("- Nome: %s %s \n- Data de entrada: %d/%d/%d \n- Data de saida: %d/%d/%d \n- Cama escolhida: %s \n- Numero do quarto: %d\n", nomeVerifca, sobrenomeVerifica,
+    dataE[0], dataE[1], dataE[2],
+    dataS[0], dataS[1], dataS[2], bed, quartoEscolhido);
+    printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n");
+    }
+    fclose(reservas);
+    printf("\n");
 }
 
 void PAINEL_ADM(int ID){

@@ -60,7 +60,7 @@ void MENU_HOTEL(char nome[]){
             break;
 
         case 2:
-            //CONSULTA_RESERVA(nome); // Consulta e edita a reserva
+            CONSULTA_RESERVA(nome); // Consulta a reserva
             MENU_HOTEL(nome);
             break;
 
@@ -83,6 +83,41 @@ void MENU_HOTEL(char nome[]){
     } while (opc != 0 && opc != 1 && opc != 2 && opc != 3);
 }
 
+void CONSULTA_RESERVA(char nome[]){
+
+    FILE *reservas;
+
+    reservas = fopen("arquivos/reservas.txt","r");
+    if(reservas == NULL){
+        printf("ERRO INESPERADO POR PARTE DO SERVIDOR, POR FAVOR TENTE NOVAMENTE UMA OUTRA HORA");
+        return 1;
+    }
+    char nomeVerifca[100],sobrenomeVerifica[100];
+    int dataE[3];
+    int dataS[3];
+    char bed[20];
+    int quartoEscolhido;
+
+    rewind(reservas);
+    while(fscanf(reservas, "%s %s %d %d %d %d %d %d %s %d\n",nomeVerifca, sobrenomeVerifica,
+    &dataE[0],&dataE[1],&dataE[2],
+    &dataS[0],&dataS[1],&dataS[2], bed, &quartoEscolhido) != EOF){
+    }
+        char nomeCompleto[100];
+        sprintf(nomeCompleto, "%s %s", nomeVerifca, sobrenomeVerifica);
+        if(strcmp(nome, nomeCompleto) == 0){ //Se o nome for encontrado, imprime os dados
+            printf("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+            printf("\tINFORMACOES DE SUA RESERVA\n");
+            printf("\n- Nome: %s %s \n- Data de entrada: %d/%d/%d \n- Data de saida: %d/%d/%d \n- Cama escolhida: %s \n- Numero do quarto: %d\n", nomeVerifca, sobrenomeVerifica,
+            dataE[0], dataE[1], dataE[2],
+            dataS[0], dataS[1], dataS[2], bed, quartoEscolhido);
+            printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+            return -1;
+        }else{ //Se o nome não for encontrado, imprime um aviso
+            printf("\nVoce ainda nao fez nenhuma reserva!\n");
+        }
+    fclose(reservas);
+}
 
 Data CONVERTER_DATA(const char *data){
     Data dataConvertida;
@@ -98,7 +133,7 @@ int FAZER_RESERVA(char nome[], char entrada[], char saida[], int cama){
         strcpy(camaOption, "Solteiro");
 
     }else if(cama ==2){
-        strcpy(camaOption, "Casado");
+        strcpy(camaOption, "Casal");
 
     }else{
         strcpy(camaOption, "QueenSize");
@@ -207,7 +242,7 @@ int CONFERIR_QUARTOS(char camaOption[]) {
             encontrou = 1;
 
             if ((strcmp(tipoQ, "Solteiro") == 0 && restantes < 40) ||
-                (strcmp(tipoQ, "Casado") == 0 && restantes < 80) ||
+                (strcmp(tipoQ, "Casal") == 0 && restantes < 80) ||
                 (strcmp(tipoQ, "QueenSize") == 0 && restantes < 100)) {
                 restantes++;
 
