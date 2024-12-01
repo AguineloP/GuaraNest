@@ -1,0 +1,3 @@
+Solteiro 2
+Casado 40
+QueenSize 80

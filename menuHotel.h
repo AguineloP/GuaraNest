@@ -3,7 +3,7 @@
 
 
 
-int FAZER_RESERVA(char nome[], char entrada[], char saida[], int cama, int andar); // Tô chamando a função aqui pra parar de ficar mostrando alertas de função implicita.
+int FAZER_RESERVA(char nome[], char entrada[], char saida[], int cama); // Tô chamando a função aqui pra parar de ficar mostrando alertas de função implicita.
 
 void MENU_HOTEL(char nome[]){
     int opc = 666;
@@ -45,15 +45,10 @@ void MENU_HOTEL(char nome[]){
 
             } while (tipoCama != 1 && tipoCama != 2 && tipoCama != 3);
 
-            do{
-                printf("\nQual andar desejado?");
-                scanf("%d", &andar);
-
-            } while (andar > 100 || andar < 1);
-
             printf("\nVerificando disponibilidade...\n");
 
-            numQuarto = FAZER_RESERVA(nome, dtEntrada, dtSaida, tipoCama, andar);
+            numQuarto = FAZER_RESERVA(nome, dtEntrada, dtSaida, tipoCama);
+            printf("%d", numQuarto);
 
             if (numQuarto != -1) {
                 printf("\nReserva efetuada com sucesso!\nSeu quarto e o numero %d.", numQuarto);
@@ -96,7 +91,27 @@ Data CONVERTER_DATA(const char *data){
     return dataConvertida;
 }
 
-int FAZER_RESERVA(char nome[], char entrada[], char saida[], int cama, int andar){
+int FAZER_RESERVA(char nome[], char entrada[], char saida[], int cama){
+    char camaOption[50];
+
+    if(cama == 1){
+        strcpy(camaOption, "Solteiro");
+
+    }else if(cama ==2){
+        strcpy(camaOption, "Casado");
+
+    }else{
+        strcpy(camaOption, "QueenSize");
+    }
+
+    int disponibilidade = CONFERIR_QUARTOS(camaOption);
+
+    if(disponibilidade == -1){
+        return -1;
+    }
+
+
+
 
     Data dataEntrada = CONVERTER_DATA(entrada);
     Data dataSaida = CONVERTER_DATA(saida);
@@ -113,14 +128,13 @@ int FAZER_RESERVA(char nome[], char entrada[], char saida[], int cama, int andar
 
     int dataE[3];
     int dataS[3];
-    int VerficiaA;
-    int c;
-
+    int bed;
+    int quartoEscolhido;
 
 
     while (fscanf(reservas, "%s %s %d %d %d %d %d %d %d %d",nomeVerifca, sobrenomeVerifica,
     &dataE[0],&dataE[1],&dataE[2],
-    &dataS[0],&dataS[1],&dataS[2], &c, &VerficiaA) != EOF) {
+    &dataS[0],&dataS[1],&dataS[2], &bed, &quartoEscolhido) != EOF) {
 
         char nomeCompleto[100];
         sprintf(nomeCompleto, "%s %s", nomeVerifca, sobrenomeVerifica);
@@ -157,15 +171,76 @@ int FAZER_RESERVA(char nome[], char entrada[], char saida[], int cama, int andar
     token = strtok(NULL, " ");
     strcpy(sobrenomeV, token);
 
-    fprintf(reservas, "%s %s %d %d %d %d %d %d %d %d\n",nomeV, sobrenomeV,
+
+
+    fprintf(reservas, "%s %s %d %d %d %d %d %d %s %d\n",nomeV, sobrenomeV,
     dataEntrada.dia,dataEntrada.mes,dataEntrada.ano,
-    dataSaida.dia,dataSaida.mes,dataSaida.ano, cama, andar);
+    dataSaida.dia,dataSaida.mes,dataSaida.ano, camaOption,disponibilidade);
 
 
     fclose(reservas);
 
-    return 0;
+    return disponibilidade;
 }
+
+int CONFERIR_QUARTOS(char camaOption[]) {
+    FILE *quartos = fopen("arquivos/quartosDisponiveis.txt", "r");
+    if (!quartos) {
+        printf("\nErro no sistema. Por favor, tente novamente em outra hora.\n");
+        return -1;
+    }
+
+    FILE *tempFile = fopen("arquivos/temp.txt", "w");
+    if (!tempFile) {
+        fclose(quartos);
+        printf("\nErro ao criar o arquivo temporário.\n");
+        return -1;
+    }
+
+    char tipoQ[15];
+    int restantes;
+    int encontrou = 0;
+    int quartoEscolhido = 0;  // Inicializando a variável
+
+    while (fscanf(quartos, "%s %d", tipoQ, &restantes) != EOF) {
+        if (strcmp(camaOption, tipoQ) == 0) {
+            encontrou = 1;
+
+            if ((strcmp(tipoQ, "Solteiro") == 0 && restantes < 40) ||
+                (strcmp(tipoQ, "Casado") == 0 && restantes < 80) ||
+                (strcmp(tipoQ, "QueenSize") == 0 && restantes < 100)) {
+                restantes++;
+
+                quartoEscolhido = restantes;
+
+                fprintf(tempFile, "%s %d\n", tipoQ, restantes);
+
+            } else {
+                printf("Erro: Não há mais quartos disponiveis para '%s'.\n", tipoQ);
+                fclose(quartos);
+                fclose(tempFile);
+                remove("arquivos/temp.txt");
+                return -1;
+            }
+        } else {
+            fprintf(tempFile, "%s %d\n", tipoQ, restantes);
+        }
+    }
+
+    fclose(quartos);
+    fclose(tempFile);
+
+    if (!encontrou) {
+        printf("Tipo de cama não encontrado.\n");
+        return -1;
+    }
+
+    remove("arquivos/quartosDisponiveis.txt");
+    rename("arquivos/temp.txt", "arquivos/quartosDisponiveis.txt");
+
+    return quartoEscolhido;
+}
+
 
 
 #endif // MENUHOTEL_H_INCLUDED
